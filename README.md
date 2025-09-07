@@ -147,5 +147,5 @@ Ce portfolio démontre une expertise solide en analyse de données et recherche 
 
 ---
 
-*Portfolio mis à jour : 2024*  
+*Portfolio mis à jour : Septembre 2025*  
 *Tous les projets respectent les standards académiques et méthodologiques en vigueur*
