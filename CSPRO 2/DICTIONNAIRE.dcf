@@ -1,0 +1,745 @@
+﻿[Dictionary]
+Version=CSPro 7.7
+Label=DICTIONNAIRE
+Name=DICTIONNAIRE_DICT
+RecordTypeStart=1
+RecordTypeLen=1
+Positions=Relative
+ZeroFill=No
+DecimalChar=Yes
+SecurityOptions=77EDA50BB62DB470E4F9EAF8B41414201E54302B3024272512994623B37E0440
+
+[Level]
+Label=DICTIONNAIRE Level
+Name=DICTIONNAIRE_LEVEL
+
+[IdItems]
+
+[Item]
+Label=Strate du ménage
+Name=S0_Q1
+Start=2
+Len=2
+DataType=Numeric
+ZeroFill=Yes
+
+[Item]
+Label=Grappe du ménage
+Name=S0_Q2
+Start=4
+Len=4
+DataType=Numeric
+ZeroFill=Yes
+
+[Item]
+Label=Numero du ménage
+Name=S0_Q3
+Start=8
+Len=4
+DataType=Numeric
+ZeroFill=Yes
+
+[Record]
+Label=SECTION1: identification du ménage
+Name=SECTION1
+RecordTypeValue='1'
+RecordLen=118
+
+[Item]
+Label=Région de l'enquêté
+Name=S1_Q1
+Start=12
+Len=2
+DataType=Numeric
+ZeroFill=Yes
+
+[ValueSet]
+Label=Région du Burkina Faso
+Name=REGION_VS
+Value=1;Centre
+Value=2;Centre-Sud
+Value=3;Centre-Ouest
+Value=4;Centre-Nord
+Value=5;Centre-Est
+Value=6;Plateau centrale
+Value=7;Haut-Bassin
+Value=8;Cascade
+Value=9;Est
+Value=10;Nord
+Value=11;Sahel
+Value=12;Boucle du mouhoun
+Value=13;Sud-Ouest
+
+[Item]
+Label=Province de l'enquêté
+Name=S1_Q2
+Start=14
+Len=2
+DataType=Numeric
+ZeroFill=Yes
+
+[ValueSet]
+Label=Province de la boucle du Mouhoun
+Name=MOUHOU_VS4
+Value=1;Balé
+Value=2;Banwa
+Value=3; Kossi
+Value=4;Mouhoun
+Value=5;Nayala
+Value=6;sourou
+
+[ValueSet]
+Label=province de comoé
+Name=COMOE_VS5
+Value=7;Comoé
+Value=8;Léraba
+
+[ValueSet]
+Label=Province du centre
+Name=KADIOGO
+Value=9;Kadiogo
+
+[ValueSet]
+Label=Province du centre Est
+Name=CENTRE_EST_VS5
+Value=10;Boulgou
+Value=11;Koulpéologo
+Value=12;Kouritenga
+
+[ValueSet]
+Label=Province du centre Nord
+Name=CENTRE_NORD_VS6
+Value=13;Bam
+Value=14;Namentenga
+Value=15;Sanmatenga
+
+[ValueSet]
+Label=Province du centre Ouest
+Name=CENTR_OUEST_VS7
+Value=16;Boulkiemdé
+Value=17;Sanguié
+Value=18;Sssili
+Value=19;Ziro
+
+[ValueSet]
+Label=Province du centre Sud
+Name=CENTRE_SUD_VS8
+Value=20;Bazèga
+Value=21;Nahouri
+Value=22;Zoundwéogo
+
+[ValueSet]
+Label=Province de l'EST
+Name=EST_VS9
+Value=23;Gnagna
+Value=24;Gourma
+Value=25;Komandjoari
+Value=26;Kompienga
+Value=27;Tapoa
+
+[ValueSet]
+Label=Province de Haut Bassints
+Name=HB_VS10
+Value=28;Houet
+Value=29;Kénédougou
+Value=30;Tuy
+
+[ValueSet]
+Label=Province du Nord
+Name=NORD_VS11
+Value=31;Loroum
+Value=32;Passoré
+Value=33;Yatenga
+Value=34;Zondoma
+
+[ValueSet]
+Label=Province du Plateau Central
+Name=PLATEAU_CENTRAL_V12
+Value=35;Gangourgou
+Value=36;Kourwéogo
+Value=37;Oubritenga
+
+[ValueSet]
+Label=Province de Sahel
+Name=SAHEL_VS13
+Value=38;Oudalan
+Value=39;Séno
+Value=40;Soum
+Value=41;YAgha
+
+[ValueSet]
+Label=Province du Sud Ouest
+Name=SUD_OUEST_VS14
+Value=42;Bougouriba
+Value=43;loba
+Value=44;Noumbiel
+Value=45;Poni
+
+[Item]
+Label=Commune de l'enquêté
+Name=S1_Q3
+Start=16
+Len=20
+DataType=Alpha
+
+[Item]
+Label=Village de l'enquêté
+Name=S1_Q4
+Start=36
+Len=20
+DataType=Alpha
+
+[Item]
+Label=Numéro du ménage de l'enquêté
+Name=S1_Q5
+Start=56
+Len=4
+DataType=Numeric
+ZeroFill=Yes
+
+[Item]
+Label=Nom du chef de ménage
+Name=S1_Q6
+Start=60
+Len=25
+DataType=Alpha
+
+[Item]
+Label=Numéro de téléphone du chef de ménage
+Name=S1_Q7
+Start=85
+Len=8
+DataType=Numeric
+
+[Item]
+Label=Date d'interview
+Name=S1_Q8
+Start=93
+Len=10
+DataType=Alpha
+
+[Item]
+Label=Heure du debut d'intervew
+Name=S1_Q9
+Start=103
+Len=8
+DataType=Alpha
+
+[Item]
+Label=Heure de fin d'intervew
+Name=S1_Q10
+Start=111
+Len=8
+DataType=Numeric
+
+[Record]
+Label=SECTION2: Composition du ménage
+Name=SECTION2
+RecordTypeValue='2'
+MaxRecords=20
+RecordLen=75
+
+[Item]
+Label=Numéro de l'individu
+Name=S2_Q0
+Start=12
+Len=2
+DataType=Numeric
+
+[Item]
+Label=Nom du l'individu
+Name=S2_Q1
+Start=14
+Len=25
+DataType=Alpha
+
+[Item]
+Label=Lien avec le chef de ménage
+Name=S2_Q2
+Start=39
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Lien avec le Chef de ménage
+Name=S2_Q2_VS2
+Value=1;Chef de Ménage (CM)
+Value=2;Conjoint/conjointe du CM
+Value=3;Enfantdu CM ou conjoint (de la conjointe)
+Value=4;Frere/Soeur du CM
+Value=5;Père/Mère du CM
+Value=6;Autres parent du CM
+Value=7;Domestique
+Value=8;Autre
+
+[Item]
+Label=Age de l'individu
+Name=S2_Q3
+Start=40
+Len=2
+DataType=Numeric
+
+[Item]
+Label=Sexe de l'individu
+Name=S2_Q4
+Start=42
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Sexe de l'individu
+Name=SEXE_VS
+Value=0;Masculin
+Value=1;Feminin
+
+[Item]
+Label=Situation matrimoniale
+Name=S2_Q5
+Start=43
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Situation matrimoniale
+Name=ST_MAT_VS
+Value=1;Célibataire
+Value=2;Marié monogame
+Value=3;Marié polygame
+Value=4;Union libre ou concubinage
+Value=5;Divorcé(e)
+Value=6;Veuf/Veouve
+Value=7;Autre à préciser
+
+[Item]
+Label=Réligion de l'individu
+Name=S2_Q6
+Start=44
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Réligion de l'individu
+Name=RELIGION_VS
+Value=1;Islam
+Value=2;Catholicisme
+Value=3;Protestentisme
+Value=4;Religion africaine
+Value=5;Autre
+
+[Item]
+Label=Ethnie de l'individu
+Name=S2_Q7
+Start=45
+Len=2
+DataType=Numeric
+
+[ValueSet]
+Label=Ethnie de l'individu
+Name=ETHNIE_VS
+Value=1;Mossé
+Value=2;Peulh
+Value=3;Gourmantché
+Value=4;Bissa
+Value=5;Gourounssi
+Value=6;Sénoufo
+Value=7;Samo
+Value=8;Lobi
+Value=9;Dagara
+Value=10;Kibsi
+Value=11;Bobo
+Value=12;Dogon
+Value=13;Gouin
+Value=14;Dafing
+Value=15;Autres
+
+[Item]
+Label=Niveau d'étude de l'individu
+Name=S2_Q8
+Start=47
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Niveau d'étude de l'individu
+Name=ETUDE_CV
+Value=1;Aucun
+Value=2;Primaire
+Value=3;Sécondaire
+Value=4;Universitaire
+Value=5;Autre
+
+[Item]
+Label=La langue principale parlée par l'individu
+Name=S2_Q9
+Start=48
+Len=9
+DataType=Numeric
+
+[Item]
+Label=Chois langue
+Name=CHOIS_LANGUE
+Start=48
+Len=1
+ItemType=SubItem
+DataType=Numeric
+Occurrences=9
+
+[Item]
+Label=Présiser l'autre langue
+Name=S2_Q11
+Start=57
+Len=10
+DataType=Alpha
+
+[Item]
+Label=Langues parlées par l'individu
+Name=S2_Q10
+Start=67
+Len=1
+DataType=Alpha
+Occurrences=9
+
+[ValueSet]
+Label=Langues parlées par l'individu
+Name=S2_Q10_VS1
+Value='A';Moore
+Value='B';Dioula
+Value='C';Fulfudé
+Value='D';AutreLA
+Value='E';Francais
+Value='F';Anglais
+Value='G';Espagnol
+Value='H';Mandarin
+Value='I';AutreLNA
+
+[Record]
+Label=SECTION3:Caractéristiques du ménage
+Name=SECTION3
+RecordTypeValue='3'
+RecordLen=89
+
+[Item]
+Label=Type de logement
+Name=S3_Q1
+Start=12
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Type de logement
+Name=LOGEMENT_VS
+Value=1;Appartement
+Value=2;Villa
+Value=3;Maison individuelle
+Value=4;Maison a plusiers logements
+Value=5;Maison traditionnelle
+Value=6;Autre
+
+[Item]
+Label=Préciser Autre
+Name=S3_Q1_AUTRE
+Start=13
+Len=15
+DataType=Alpha
+
+[Item]
+Label=Nombre total de pièces dans le logement
+Name=S3_Q2
+Start=28
+Len=1
+DataType=Numeric
+
+[Item]
+Label=Nombre de chambres à coucher dans le logement
+Name=S3_Q3
+Start=29
+Len=1
+DataType=Numeric
+
+[Item]
+Label=Statut d'occupation
+Name=S3_Q4
+Start=30
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Statut d'occupation
+Name=S3_Q4_VS1
+Value=1;Proprietaire ayant un document légal
+Value=2;Propriétaire n'ayant pas de documents légales
+Value=3;Location
+Value=4;Logé par un employeur
+Value=5;Logé gratuitement par un parent
+Value=6;Nomade ou logement temporaire
+Value=7;Autre
+
+[Item]
+Label=Préciser autre
+Name=S3_Q4_AUTRE
+Start=31
+Len=15
+DataType=Alpha
+
+[Item]
+Label=Valeur mensuel
+Name=S3_Q5
+Start=46
+Len=1
+DataType=Numeric
+
+[Item]
+Label=Posséssion
+Name=S3_Q6
+Start=47
+Len=13
+DataType=Alpha
+
+[ValueSet]
+Label=Posséssion
+Name=POSSESSION_VS
+Value='A            ';Ordinateur
+Value='B            ';Téléphone
+Value='C            ';Télévision
+Value='D            ';Internt
+Value='E            ';Réfrigérateur
+Value='F            ';Climatiseur
+Value='G            ';Cuisinière à gaz
+Value='H            ';Voiture
+Value='I            ';Moto
+Value='J            ';Bovin
+Value='K            ';OVIN
+Value='L            ';Aucun
+Value='M            ';Autre
+
+[Item]
+Label=Possession_Choix
+Name=S3_Q6_CHT
+Start=60
+Len=1
+DataType=Numeric
+
+[Item]
+Label=Ordinateur
+Name=S3_Q6_A
+Start=61
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Ordinateur
+Name=S3_Q6_A_VS1
+Value=1;oui
+Value=0;non
+
+[Item]
+Label=Téléphone
+Name=S3_Q6_B
+Start=62
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Téléphone
+Name=S3_Q6_B_VS1
+Value=1;oui
+Value=0;non
+
+[Item]
+Label=Télévision
+Name=S3_Q6_C
+Start=63
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Télévision
+Name=S3_Q6_C_VS1
+Value=1;oui
+Value=0;non
+
+[Item]
+Label=Internet
+Name=S3_Q6_D
+Start=64
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Internet
+Name=S3_Q6_D_VS1
+Value=1;oui
+Value=0;non
+
+[Item]
+Label=Réfrigérateur
+Name=S3_Q6_E
+Start=65
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Réfrigérateur
+Name=S3_Q6_E_VS1
+Value=1;oui
+Value=0;non
+
+[Item]
+Label=Climatiseur
+Name=S3_Q6_F
+Start=66
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Climatiseur
+Name=S3_Q6_F_VS1
+Value=1;oui
+Value=0;non
+
+[Item]
+Label=Cuisinière à gaz
+Name=S3_Q6_G
+Start=67
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Cuisinière à gaz
+Name=S3_Q6_G_VS1
+Value=1;oui
+Value=0;non
+
+[Item]
+Label=Voiture
+Name=S3_Q6_H
+Start=68
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Voiture
+Name=S3_Q6_H_VS1
+Value=1;oui
+Value=0;non
+
+[Item]
+Label=Moto
+Name=S3_Q6_I
+Start=69
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Moto
+Name=S3_Q6_I_VS1
+Value=1;oui
+Value=0;non
+
+[Item]
+Label=Bovins
+Name=S3_Q6_J
+Start=70
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Bovins
+Name=S3_Q6_J_VS1
+Value=1;oui
+Value=0;non
+
+[Item]
+Label=Ovins
+Name=S3_Q6_K
+Start=71
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Ovins
+Name=S3_Q6_K_VS1
+Value=1;oui
+Value=0;non
+
+[Item]
+Label=Volaille
+Name=S3_Q6_L
+Start=72
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Volaille
+Name=S3_Q6_L_VS1
+Value=1;oui
+Value=0;non
+
+[Item]
+Label=Aucun
+Name=S3_Q6_M
+Start=73
+Len=1
+DataType=Numeric
+
+[Item]
+Label=Autre
+Name=S3_Q6_1
+Start=74
+Len=1
+DataType=Numeric
+
+[ValueSet]
+Label=Autre
+Name=S3_Q6_1_VS1
+Value=1;oui
+Value=0;non
+
+[Item]
+Label=Préciser autre
+Name=S3_Q6_AUTRE
+Start=75
+Len=15
+DataType=Alpha
+
+[Record]
+Label=Tableau des biens
+Name=SECTION3_T
+RecordTypeValue='4'
+MaxRecords=12
+RecordLen=43
+
+[Item]
+Label=Code du bien
+Name=S3_Q6_T1
+Start=12
+Len=1
+DataType=Alpha
+
+[Item]
+Label=Libellé du bien
+Name=S3_Q6_T2
+Start=13
+Len=15
+DataType=Alpha
+
+[Item]
+Label=Quantité du bien
+Name=S3_Q6_T3
+Start=28
+Len=2
+DataType=Numeric
+
+[Item]
+Label=Valeur Unitaire
+Name=S3_Q6_T4
+Start=30
+Len=6
+DataType=Numeric
+
+[Item]
+Label=Valeur totale
+Name=S3_Q6_T
+Start=36
+Len=8
+DataType=Numeric

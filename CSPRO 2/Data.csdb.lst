@@ -1,0 +1,660 @@
+﻿Application     E:\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> E:\CSPRO 2\Data.csdb
+
+Date            Feb 03, 2024
+Start Time      10:30:33
+End Time        10:32:49
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     E:\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> E:\CSPRO 2\Data.csdb
+
+Date            Feb 03, 2024
+Start Time      12:37:07
+End Time        12:39:17
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           3         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           3         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     E:\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> E:\CSPRO 2\Data.csdb
+
+Date            Feb 03, 2024
+Start Time      12:55:10
+End Time        13:14:42
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           5         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           5         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     E:\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> E:\CSPRO 2\Data.csdb
+
+Date            Feb 03, 2024
+Start Time      13:14:50
+End Time        13:15:34
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           5         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           5         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     E:\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> E:\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      14:18:49
+End Time        14:19:55
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     E:\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> E:\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      14:19:56
+End Time        14:20:18
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     E:\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> E:\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      14:20:18
+End Time        14:34:25
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889          31         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990          31         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     E:\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> E:\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      14:54:08
+End Time        15:05:13
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           3         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           3         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      14:59:11
+End Time        14:59:13
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      14:59:13
+End Time        14:59:14
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      14:59:14
+End Time        14:59:17
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      17:55:21
+End Time        17:55:37
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      18:01:45
+End Time        18:01:48
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      18:02:26
+End Time        18:03:11
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           1         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           1         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      18:08:02
+End Time        18:08:07
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      18:16:26
+End Time        18:17:41
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      18:18:13
+End Time        18:20:16
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889          69         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990          69         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 08, 2024
+Start Time      18:20:18
+End Time        18:20:20
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889          69         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990          69         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      13:58:34
+End Time        14:00:00
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:00:00
+End Time        14:00:25
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:00:25
+End Time        14:00:35
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:10:28
+End Time        14:16:41
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           7         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           7         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:16:42
+End Time        14:16:53
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           7         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           7         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:16:53
+End Time        14:16:57
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           7         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           7         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:16:57
+End Time        14:16:59
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           7         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           7         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:16:59
+End Time        14:17:00
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           7         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           7         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:17:00
+End Time        14:17:01
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           7         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           7         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:17:01
+End Time        14:17:02
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           7         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           7         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:17:02
+End Time        14:17:06
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           7         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           7         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:17:06
+End Time        14:17:07
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           7         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           7         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:17:07
+End Time        14:17:08
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           7         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           7         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:17:08
+End Time        14:17:18
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           7         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           7         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:20:05
+End Time        14:25:15
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889          17         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990          16         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:25:24
+End Time        14:25:26
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889          17         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990          17         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:25:26
+End Time        14:27:11
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889          21         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990          21         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:51:38
+End Time        14:51:44
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      14:51:44
+End Time        15:01:25
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      15:27:59
+End Time        15:32:22
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           2         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           2         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      15:42:29
+End Time        15:45:44
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      16:24:36
+End Time        16:24:38
+
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------
+Application     C:\Users\SANKARA\Desktop\CSPRO 2\SAISIE.ent
+Type            ENTRY
+Input Data      <<CSPro DB>> C:\Users\SANKARA\Desktop\CSPRO 2\Data.csdb
+
+Date            Feb 09, 2024
+Start Time      16:24:38
+End Time        16:26:30
+
+
+System messages:
+
+  Number        Freq         Message Text                                                                               
+  ------        ----         ------------                                                                               
+   88889           1         ATTENTION: Hors valeurs valides! Entrer une valeur valide pour %s%s                        
+   99990           1         Operator entered a value out of range                                                      
+
+
+CSPro Executor Normal End
+------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A propos</title>
+    <style>
+        
+        body {
+            background-color: #e0f7fa; /* Bleu très clair */
+            font-family: Arial, sans-serif;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            animation: zoomIn 2s ease-in-out;
+            font-size: 2.5em;
+            font-family: 'Cinzel Decorative', cursive;
+            font-weight: bold;
+            color: #00796b;
+            text-decoration: underline;
+        }
+        p {
+            margin: 20px;
+            padding: 20px;
+            font-size: 1.2em;
+            text-align: justify;
+            animation: fadeInUp 2s ease-in-out;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+        }
+        b, i {
+            font-weight: bold;
+            font-style: italic;
+        }
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>A PROPOS</h1>
+    <p>Ce site web a été conçu par le groupe 1 composé de <b><i>BAYILI Pema</i></b>, <b><i>COMPAORE Alexis</i></b> et <b><i>SANKARA Saïdou</i></b>. Il permet de gérer les salles de classe. Cette gestion est seulement permise aux administrateurs qui sont créés par un super administrateur.</p>
+    <p>La conception du site web s'inscrit dans le cadre d'un projet de classe pour évaluer nos connaissances à l'issue du cours de développement web avec python.</p>
+    <p>Nous tenons à remercier notre enseignant <b><i>Monsieur OUSMANE BARA</i></b>, pour avoir consacré son temps durant la période des cours à notre formation sur l'usage de python.</p>
+</body>
+</html>

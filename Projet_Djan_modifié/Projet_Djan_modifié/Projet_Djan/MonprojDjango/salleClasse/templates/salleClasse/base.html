@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de salles de classes</title>
+    <link rel="stylesheet" href="{% static 'salleClasse/css/bootstrap.css' %}">
+</head>
+
+<body>
+    <div class="container mt-5">
+{% comment %}         <h2 class="text-center alert alert-danger">Application de gestion de salles de classes</h2>
+ {% endcomment %}        {% block content %}{% endblock content %}
+    </div>
+    <script src="{% static 'salleClasse/js/jquery.js' %}"></script>
+    <script src="{% static 'salleClasse/js/bootstrap.js' %}"></script>
+    <script src="{% static 'salleClasse/js/popper.js' %}"></script>

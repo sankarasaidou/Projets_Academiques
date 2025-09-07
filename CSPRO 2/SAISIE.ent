@@ -1,0 +1,15 @@
+﻿[CSPro Application]
+Version=CSPro 7.7
+Label=SAISIE
+Name=SAISIE
+AppType=DataEntry
+[AppCode]
+File=.\SAISIE.ent.apc
+[Message]
+File=.\SAISIE.ent.mgf
+[Help]
+File=.\SAISIE.ent.qsf
+[Forms]
+File=.\SAISIE.fmf
+[Dictionary Types]
+Dict-Type=.\DICTIONNAIRE.dcf,Input,.\SAISIE.fmf

@@ -1,0 +1,95 @@
+
+{% comment %} {% load static %}
+<img src="{% static 'images/pema.jpg' %}" class="card-img-top" alt="...">
+<div class="card-body">
+    <p class="card-text">BAYILI Pema: bayilipema9@gmail.com </p>
+</div>
+
+<img src="{% static 'images/alexis.jpg' %}" class="card-img-top" alt="...">
+<div class="card-body">
+    <p class="card-text">COMPAORE Alexis: compaore24alexis24@gmail.com 63773883</p>
+</div>
+
+<img src="{% static 'images/sankara.jpg' %}" class="card-img-top" alt="...">
+<div class="card-body">
+    <p class="card-text">SANKARA Saïdou:skrsaidou@gmail.com  74731950 </p>
+</div> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte des Membres</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #e0f7fa; /* Bleu très très clair */
+            font-family: Arial, sans-serif;
+        }
+        .card-img-top {
+            width: 100%; /* S'assure que l'image prend toute la largeur de la carte */
+            height: 400px; /* Hauteur agrandie */
+            object-fit: cover; /* Maintient le ratio d'aspect tout en couvrant la zone */
+        }
+        .card {
+            animation: fadeInUp 1s ease-in-out;
+            margin-bottom: 20px;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    {% load static %}
+    <h1 class="text-center">Cartes des membres</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card">
+                    <img src="{% static 'images/pema.jpg' %}" class="card-img-top" alt="BAYILI Pema">
+                    <div class="card-body">
+                        <p class="text-center">BAYILI Péma </p>
+                        <p class="text-center">email:bayilipema9@gmail.com </p>
+                        <p class="text-center">Numéro: 55269343 </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <img src="{% static 'images/alexis.jpg' %}" class="card-img-top" alt="COMPAORE Alexis">
+                    <div class="card-body">
+                        <p class="text-center">COMPAORE Alexis Awossonoyi </p>
+                        <p class="text-center">email:compaore24alexis24@gmail.com </p>
+                        <p class="text-center">Numéro: 63773883</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <img src="{% static 'images/sankara.jpg' %}" class="card-img-top" alt="SANKARA Saïdou">
+                    <div class="card-body">
+                        <p class="text-center">SANKARA Saïdou </p>
+                        <p class="text-center">email:skrsaidou@gmail.com </p>
+                        <p class="text-center">Numéro:74731950 </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

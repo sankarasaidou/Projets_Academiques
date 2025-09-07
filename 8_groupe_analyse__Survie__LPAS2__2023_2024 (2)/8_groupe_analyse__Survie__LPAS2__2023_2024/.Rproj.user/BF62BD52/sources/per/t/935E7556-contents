@@ -1,0 +1,83 @@
+---
+title: "Untitled"
+author: "Groupe N°8 LPAS2"
+date: "2024-08-01"
+output: word_document
+---
+
+# 1- LES VARIABLES SUSCEPTIBLES D'INFLUENCER LE TEMPS MIS POUR AVOIR LE 1ER EMPLOI
+
+Les variables susceptibels d'influencer le temps mis pour avoir le premier emploi juste après la sortie de l'école:
+
+##  Le type de formation: général et technique
+
+Théorie du capital humain (Gary Becker, 1964) : Cette théorie suggère que les investissements dans l'éducation et la formation augmentent la productivité des travailleurs. Les formations techniques, plus spécifiques et directement applicables, augmentent le capital humain de manière à répondre aux besoins immédiats des employeurs, réduisant ainsi le temps de recherche d'emploi.
+
+## Le niveau de la formation
+
+Théorie du signalement (Michael Spence, 1973) : Selon cette théorie, un diplôme de niveau supérieur fonctionne comme un signal de compétence et de capacité pour les employeurs. Un niveau de formation élevé signale une productivité potentiellement supérieure, facilitant ainsi l'embauche et réduisant le temps de recherche d'emploi.
+
+## Le sexe
+
+Théorie de la discrimination sur le marché du travail (Gary Becker, 1957) : Cette théorie explique comment les préjugés et les stéréotypes peuvent entraîner des différences de traitement entre hommes et femmes sur le marché du travail. Les discriminations basées sur le sexe peuvent allonger la durée de recherche d'emploi pour les femmes.
+
+## La pérode post-formation
+
+Théorie des cycles économiques (Arthur Okun, 1962) : Selon cette théorie, les fluctuations économiques influencent les taux de chômage et les opportunités d'emploi. En période de récession, la demande pour de nouveaux travailleurs diminue, allongeant ainsi le temps nécessaire pour trouver un emploi.
+
+## L'âge
+
+Théorie de l'expérience et du cycle de vie (Jacob Mincer, 1974) : Cette théorie postule que l'expérience professionnelle accumulée au fil du temps améliore l'employabilité. Les jeunes diplômés, manquant d'expérience, peuvent prendre plus de temps à trouver un emploi que les travailleurs plus âgés avec une expérience établie.
+
+## Le statut matrimonial
+
+Théorie de la mobilité géographique et des contraintes familiales (Larry Sjaastad, 1962) : Cette théorie suggère que les personnes mariées ou ayant des responsabilités familiales ont une mobilité réduite, limitant ainsi leurs opportunités d'emploi. Les contraintes géographiques et familiales peuvent allonger la durée de recherche d'emploi.
+
+
+# 2- ANALYSE DESCRIPTIVES DES VARIABLES RETENUES POUR L'ANALYSE
+
+## Importation des base de données
+
+```{r}
+library(haven)
+individus <- read_sas("individus.sas7bdat", NULL)
+emploi <- read_sas("emploi.sas7bdat", NULL)
+```
+
+
+## Inspection des bases de données
+
+```{r}
+library(utils)
+summary(emploi)
+```
+
+```{r}
+summary(individus)
+```
+
+
+
+
+
+# 3- MODELISATION DE LA DUREE AVANT L'OBTENTION DU PREMIER EDI
+
+
+
+
+
+
+# 4- ANALYSE DE LA FONCTION DE SURVIE
+
+
+
+
+
+
+# 5- REGRESSION DE COX
+
+
+
+
+
+

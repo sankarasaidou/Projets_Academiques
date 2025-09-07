@@ -1,0 +1,536 @@
+---
+title: "Untitled"
+author: "Groupe N°8 LPAS2"
+date: "2024-08-01"
+output: word_document
+---
+
+# 1- LES VARIABLES SUSCEPTIBLES D'INFLUENCER LE TEMPS MIS POUR AVOIR LE 1ER EMPLOI
+
+Les variables susceptibels d'influencer le temps mis pour avoir le premier emploi juste après la sortie de l'école:
+
+## Le type de formation :
+
+Selon le type de formation, le temps mis pour avoir le premier emploi peut varier. Hypothèse : Les personnes ayant suivi une formation technique ou professionnelle auraient un accès plus rapide au premier emploi que les formations générales.
+
+## Le niveau de la formation
+
+En fonction du niveau de la formation des personnes, le temps mis pour avoir le premier emploi peut varier. Hypothèse: Les formations de haut niveau comme niveau supérieur purraient offrir un accès plus rapide à un premier emploi.
+
+## Le sexe
+
+Les hommes et les femmes peuvent avoir des temps d'accès différents en raison de diverses contraintes socio-économiques. Hypothèse : Les hommes obtiennent un EDI plus rapidement que les femmes.
+
+## La période post-formation
+
+Selon la période ou la personne finit sa formation, le temps mis pour avoir son premier emploi peut varier.En période de récession, la demande pour de nouveaux travailleurs diminue, allongeant ainsi le temps nécessaire pour trouver un emploi. Hypothèse : En période de demande forte en main-d'oeuvre, le temps mis pour avoir un premier emploi pourrait être reduit.
+
+## Expérience professionnelle antérieure
+
+Avoir une expérience professionnelle (stage, apprentissage, etc.) peut réduire le temps d'accès à un premier emploi. Hypothèse : Les individus ayant une expérience professionnelle antérieure trouveraient un EDI plus rapidement.
+
+## Lieu de résidence
+
+Les régions avec un marché du travail dynamique peuvent offrir des opportunités d'avoir un premier emploi plus rapidement. Hypothèse : Les résidents des régions urbaines accèdent plus rapidement à un premier emploi que ceux des zones rurales.
+
+## Importation des base de données
+
+```{r}
+library(haven)
+individus <- read_sas("individus.sas7bdat", NULL)
+emploi <- read_sas("emploi.sas7bdat", NULL)
+```
+
+## Fusion des deux bases
+
+Nous faisons la jointure des deux bases (**emploi** et **individus**) en ne conservant que les individus avec des identifiants presents dans les deux bases.
+
+```{r}
+library(dplyr)
+database <- inner_join(individus, emploi, by = "IDENT")
+```
+
+## Selection des variables d'études
+
+**phdip9:** Plus haut diplôme en 9 postes
+
+**SUPER:** Sortant du Supérieur
+
+**Q1:** Sexe de l'enquêté (1:homme , 2:femme)
+
+**AP0:** Terminé un contrat d'apprentissage entre 2003 et 2024
+
+**AP2D:** Déjà travaillé ou fait un stage dans cette entreprise
+
+**AP6:** Dans l'entreprise, avez-vous mis en application ce que vous appreniez au centre de formation
+
+**AP18:** Contrat d'apprentissage antérieur
+
+**ep15:** Comment vous aviez su qu'il y avait une embauche possible dans cette entreprise
+
+**DATDN:** Date de début de la séquence sous forme d'indice
+
+**GEO1:** Recherche d'emploi
+
+**stat_emb:** Contrat de travail lors de l'entrée dans cette séquence entreprise
+
+**stat_fin:** Dernier contrat de travail dans cette séquence entreprise
+
+**idnc:** Date du changement de contrat de travail
+
+**SITDE:** Situation de l'enquêté à la date de l'enquête
+
+## Traitement des cases vide
+Nous avons jugé nécessaire de traiter les cases vides et non supprimer les observations qui les contiennent parce qu'on a remarqué dans le dictionnaire des variables qu'il y avait des questions qui ne concernaient pas certains individus. Supprimer donc ces valeurs pourrait faire disparraitre cettains groupes d'individus. 
+```{r}
+library(dplyr)
+library(forcats)
+
+# Création d'une copie de database pour conserver l'original
+base <- database
+
+# Convertir les colonnes de caractère en facteur, sauf "IDENT"
+base <- base %>%
+  mutate(across(where(is.character) & !one_of("IDENT"), as.factor))
+
+# Boucle pour recoder chaque colonne de facteur
+for (col in names(base)) {
+  # Vérifiez si la colonne est factorielle (catégorielle)
+  if (is.factor(base[[col]])) {
+    # Remplace les niveaux vides par NA
+    levels(base[[col]])[levels(base[[col]]) == ""] <- NA
+  }
+}
+```
+
+
+## Labelisation des variables pertinentes pour l'analyse
+
+```{r}
+
+
+
+## Labelisation de la variable phdip9
+base$phdip9 <- as.character(base$phdip9)
+base$phdip9[base$phdip9 == "1"] <- "Non diplômé"
+base$phdip9[base$phdip9 == "2"] <- "CAP-BEP-MC"
+base$phdip9[base$phdip9 == "3"] <- "Bac"
+base$phdip9[base$phdip9 == "4"] <- "Deug"
+base$phdip9[base$phdip9 == "5"] <- "BTS-DUT-Santé-social"
+base$phdip9[base$phdip9 == "6"] <- "Licence L3"
+base$phdip9[base$phdip9 == "7"] <- "Maîtrise M1, MST..."
+base$phdip9[base$phdip9 == "8"] <- "DEA-DESS-Master-M2"
+base$phdip9[base$phdip9 == "9"] <- "Doctorat"
+
+## Labelisation de la variable SUPER
+base$SUPER <- as.character(base$SUPER)
+base$SUPER[base$SUPER == "1"] <- "Atteint niveau supérieur"
+base$SUPER[base$SUPER == "2"] <- "Pas atteint niveau supérieur"
+
+## Labelisation de la variable IMP39
+base$IMP39 <- as.character(base$IMP39)
+base$IMP39[base$IMP39 == "1"] <- " 1ère et 2ème année de DEUG"
+base$IMP39[base$IMP39 == "2"] <- " 1ère et 2ème année de DUT"
+base$IMP39[base$IMP39 == "3"] <- " 1ère et 2ème année de BTS "
+base$IMP39[base$IMP39 == "4"] <- " Autres "
+
+## Labelisation de la variable Q1 (Sexe)
+base$Q1 <- as.character(base$Q1)
+base$Q1[base$Q1 == "1"] <- "homme"
+base$Q1[base$Q1 == "2"] <- "femme"
+
+## Labelisation de la variable AP0  (terminé un contrat d'apprentissage)
+base$AP0 <- as.character(base$AP0)
+base$AP0[base$AP0 == "1"] <- "contrat d'apprentissage terminé"
+base$AP0[base$AP0 == "2"] <- "contrat d'apprentissage non terminé"
+
+## Labelisation de la variable AP2D
+base$AP2D <- as.character(base$AP2D)
+base$AP2D[base$AP2D == "1"] <- "travail ou stage"
+base$AP2D[base$AP2D == "2"] <- "ni travail ni stage"
+
+## Labelisation de la variable AP6
+base$AP6 <- as.character(base$AP6)
+base$AP6[base$AP6 == "1"] <- "Oui, souvent"
+base$AP6[base$AP6 == "2"] <- "Oui, parfois"
+base$AP6[base$AP6 == "3"] <- "Oui, rarement"
+base$AP6[base$AP6 == "4"] <- "Non, jamais"
+
+## Labelisation de la variable AP18
+base$AP18 <- as.character(base$AP18)
+base$AP18[base$AP18 == "1"] <- "Contrat d'apprentissage antérieur"
+base$AP18[base$AP18 == "2"] <- "pas de Contrat d'apprentissage antérieur"
+
+## Labelisation de la variable ep15
+base$ep15 <- as.character(base$ep15)
+base$ep15[base$ep15 == "1"] <- "Par l'ANPE"
+base$ep15[base$ep15 == "2"] <- "Par une mission locale, une PAIO"
+base$ep15[base$ep15 == "3"] <- "L'APEC"
+base$ep15[base$ep15 == "4"] <- "Votre établissement de formation"
+base$ep15[base$ep15 == "5"] <- "Par une de vos relations"
+base$ep15[base$ep15 == "6"] <- "Par une petite annonce (presse, internet)"
+base$ep15[base$ep15 == "7"] <- "(NE PAS CITER) Par une candidature spontanée"
+base$ep15[base$ep15 == "8"] <- "(NE PAS CITER) Par l'intérim"
+base$ep15[base$ep15 == "9"] <- "Autres"
+
+## Labelisation de la variable ep25
+base$ep25 <- as.character(base$ep25)
+base$ep25[base$ep25 == "1"] <- "Changement de statut"
+base$ep25[base$ep25 == "2"] <- "pas de Changement de statut"
+
+## Labelisation de la variable GEO1
+base$GEO1 <- as.character(base$GEO1)
+base$GEO1[base$GEO1 == "1"] <- "Uniquement dans votre région"
+base$GEO1[base$GEO1 == "2"] <- "Uniquement dans une autre région"
+base$GEO1[base$GEO1 == "3"] <- "Dans plusieurs régions"
+base$GEO1[base$GEO1 == "4"] <- "Dans toute la FRANCE"
+base$GEO1[base$GEO1 == "5"] <- "En FRANCE ou à l'étranger"
+
+## Labelisation de la variable SITDE
+base$sitde <- as.character(base$sitde)
+base$sitde[base$sitde == "1"] <- "Emploi"
+base$sitde[base$sitde == "2"] <- "Chômage"
+base$sitde[base$sitde == "3"] <- "Inactivité"
+base$sitde[base$sitde == "4"] <- "Formation"
+base$sitde[base$sitde == "5"] <- "Reprise d’études"
+
+
+base <- base %>%
+  mutate(stat_emb_EDI = case_when(stat_emb=="03"~ 1, stat_emb=="04" ~ 1, TRUE ~ 0))
+
+## Labelisation de la variable stat_emb_EDI
+base$stat_emb_EDI <- as.character(base$stat_emb_EDI)
+base$stat_emb_EDI[base$stat_emb_EDI == "1"] <- "emb_EDI"
+base$stat_emb_EDI[base$stat_emb_EDI == "0"] <- "Autres"
+
+base <- base %>%
+  mutate(stat_fin_EDI = case_when(stat_fin=="03"~ 1, stat_fin=="04" ~ 1, TRUE ~ 0))
+
+## Labelisation de la variable stat_emb_EDI
+base$stat_fin_EDI <- as.character(base$stat_fin_EDI)
+base$stat_fin_EDI[base$stat_fin_EDI == "1"] <- "fin_EDI"
+base$stat_fin_EDI[base$stat_fin_EDI == "0"] <- "Autres"
+
+## Labelisation de la variable strateg
+library(dplyr)
+base <- base %>%
+  mutate(Strat = case_when(
+    grepl("^A", strateg) ~ "Formation agricole",
+    grepl("^s", strateg) ~ "Ecole de la santé et du social",
+    grepl("^C", strateg) ~ " Apprenti du lycée",
+    grepl("^G", strateg) ~ "Apprenti du supérieur",
+    grepl("^I", strateg) ~ "Institut Universitaire de 
+Formation des Maitres",
+    grepl("^J", strateg) ~ "Directions Régionales Jeunesse et Sport",
+    grepl("^R", strateg) ~ "Rectorats",
+    grepl("^U", strateg) ~ "Universités",
+    grepl("^Z", strateg) ~ "Ecoles du supérieur"))
+
+```
+
+# 2- ANALYSE DESCRIPTIVE DES VARIABLES RETENUES POUR L'ANALYSE
+
+## Tabulation de la variable phdip9: Plus haut diplôme en 9 postes
+
+```{r}
+round(prop.table(table(base$phdip9, base$sitde), margin=1),4)
+```
+Ce tableau est le croisement de la variable "Plus haut diplôme" et la "situation de la personne pendant l'enquête".
+Pour tout type de diplôme, ceux qui ont un emploi sont les plus nombreux avec repectivement 79.48% pour ceux qui ont le bac, 90.60% pour BTS-DUT-Santé-social, 81.78% pour CAP-BEP-MC, 92.23% pour DEA-DESS-Master-M2, 78.26% pour Deug, 92.18% pour Doctorat, 85.64% pour Licence L3, 84.88% pour Maîtrise M1, MST et 72.87% pour les non diplômés.
+
+## Tabulation de la variable SUPER: Sortant du Supérieur
+
+```{r}
+table(base$SUPER)
+round(prop.table(table(base$SUPER, base$sitde), margin=1),4)
+```
+Les persones qui ont atteint un niveau supérieur sont de 39122 contre 30860 qui n'ont pas atteint un niveau supérieur.
+Ces statisyiques nous montrent que ceux qui ont atteint le niveau supérieur ont une proportion d'accès à l'emploi plus élevée que ceux qui n'ont pas atteint niveau supérieur, soit 86.76% contre 79.80%.
+
+## Tabulation de la variable Q1: Sexe de l'enquêté (1:homme , 2:femme)
+
+```{r}
+table(base$Q1)
+round(prop.table(table(base$Q1, base$sitde), margin=1),4)
+```
+Les femmes sont 33414 tansis que les hommmes sont de 36568.
+La différence de proportion d'accès à l'emploi entre les hommes et les femmes n'est pas très remarquable soit respectivement 84.72% et 82.57%.
+
+## Tabulation de la variable AP0: Terminé un contrat d'apprentissage entre 2003 et 2024
+
+```{r}
+table(base$AP0)
+round(prop.table(table(base$AP0, base$sitde), margin=1),4)
+```
+Les personnes n'ayant pas terminé leur contrat d'apprentissage sont de 564 et celles ayant terminé leur contrat d'apprentissage sont de 10945.
+La différence de la proportion d'accès à l'emploi entre les personnes qui ont eu un contrat d'apprentissage non terminé et celles qui ont eu un contrat d'apprentissage terminé n'est pas très grande soit respectivement 85.82% et 88.31%.
+
+## Tabulation de la variable AP2D: Déjà travaillé ou fait un stage dans cette entreprise
+
+```{r}
+table(base$AP2D)
+round(prop.table(table(base$AP2D, base$sitde), margin=1),4)
+```
+Les personnes qui n'ont ni travaillé, ni fait de stage dans l'entreprise sont de 59037 tandis que celles qui ont travaillé ou fait de stage sont de 3665.
+La différence de la proportion d'accès à l'emploi entre les personnes qui n'ont ni travaillé ni fait de stage dans l'entreprise et qui ont travaillé ou fait de stage dans l'entreprise, n'est pas très grande soit respectivement 87.65% et 89.63%.
+
+## Tabulation de la variable AP6: Dans l'entreprise, avez-vous mis en application ce que vous appreniez au centre de formation
+
+```{r}
+table(base$AP6)
+round(prop.table(table(base$AP6, base$sitde), margin=1),4)
+```
+Les personnes qui n'ont jamais mis en application ce qu'elles ont appris sont de 994, celles qui ont parfois appliqué sont de 2567, celles qui ont rarement appliqué sont de 898, celles qui ont souvent appliqué sont de 6486.
+La situation des personnes selon s'elles ont appliquaient leurs connaissanaces au centre de formation diffère sensiblement. Celles qui n'ont jamais appliqué ont une proportion d'accès à l'emploi de 85.61%. Celles qui appliquent parfois et celles qui appliquent souvent ont toutes une proportion d'accès à l'emploi de 89%. Quant à celles qui appliquent rarement, elles ont une proportion d'accès à l'emploi de 83.30%.
+
+## Tabulation de la variable AP18: Contrat d'apprentissage antérieur
+
+```{r}
+table(base$AP18)
+round(prop.table(table(base$AP18, base$sitde), margin=1),4)
+```
+
+La différence de la proportion d'accès à l'emploi entre les personnes qui ont eu Contrat d'apprentissage antérieur et celles qui n'ont pas eu Contrat d'apprentissage antérieur, n'est pas très grande soit respectivement 88.60% et 88.24%.
+
+## Tabulation de la variable ep15: Comment vous aviez su qu'il y avait une embauche possible dans cette entreprise
+
+```{r}
+table(base$ep15)
+round(prop.table(table(base$ep15, base$sitde), margin=1),4)
+```
+La situation des personnes selon la source d'information qu'il y avait une embauche possible dans cette entreprise diffère.
+Celles qui ont eu l'information à travers l'ANPE ont une proportion d'accès à l'emploi de 83.02%. Celles quiont eu l'information par les relations ont une proportion d'accès à l'emploi de 81.91%. Celles qui ont eu l'information par une mission locale ou une PAIO ont une proportion d'accès à l'emploi de 73.71%. Celles qui ont eu l'information par une petite annonce (presse, internet) ont une proportion d'accès à l'emploi de 86.85%. Quant à celles qui ont eu l'information à travers leur établissement de formation ont une proportion d'accès à l'emploi de 90.18%.
+
+
+## Tabulation de la variable stat_emb: Contrat de travail lors de l'entrée dans cette séquence entreprise
+
+```{r}
+table(base$stat_emb_EDI)
+round(prop.table(table(base$stat_emb_EDI, base$sitde), margin=1),4)
+```
+La situation des personnes à l'embauchement diffère. Celles qui ont eu un EDI ont un accès à l'emploi de 92.40% contre 80.42% pour les autres.
+
+## Tabulation de la variable stat_fin: Dernier contrat de travail dans cette séquence entreprise
+
+```{r}
+table(base$stat_fin_EDI)
+round(prop.table(table(base$stat_fin_EDI, base$sitde), margin=1),4)
+```
+La situation des personnes au dernier contrat de travail dans cette séquence entreprise diffère. Celles qui ont eu un EDI ont un accès à l'emploi de 93.48% contre 78.39% pour les autres.
+
+## Création de la variables EDI
+
+```{r}
+base <- base %>%
+  mutate(EDI = case_when(stat_emb=="03"~ 1, stat_emb=="04" ~ 1 ,stat_fin=="03" ~ 1,stat_fin=="04"~ 1, TRUE ~ 0))
+```
+
+# 3- MODELISATION DE LA DUREE AVANT L'OBTENTION DU PREMIER EDI
+
+a)Calculer de la durée avant l’obtention du premier EDI à la sortie du système éducatif
+
+```{r}
+base <- base %>%
+mutate(id=as.numeric(id),DATDN=as.numeric(DATDN),`if`=as.numeric(`if`),idnc=as.numeric(idnc))
+
+library(dplyr)
+base <- base %>%
+  mutate(duree = case_when(
+    EDI == 1 & (stat_emb != "04" & stat_emb != "03") ~ as.numeric(idnc - id),
+    EDI == 1 & (stat_fin != "04" & stat_fin != "03") ~ as.numeric(DATDN - id),
+    TRUE ~ `if` - id
+  ))
+```
+
+b)Modélisation de la durée avant l’obtention du premier EDI à la sortie du système éducatif
+
+```{r}
+library(dplyr)
+library(survival)
+library(survminer)
+# Ajustement du modèle de Kaplan-Meier
+km_fit <- survfit(Surv(duree, EDI) ~ 1, data = base)
+
+# Résultats du modèle
+summary(km_fit)
+# Visualisation de la fonction de survie estimée
+ggsurvplot(km_fit, data = base, xlab = "durée en mois", ylab = "Probabilité de survie",
+           conf.int = TRUE, risk.table = TRUE, ggtheme = theme_minimal())
+```
+Ce graphique montre la probabilité de survie(ne pas avoir un EDI) de 69 982 individus sur une période de 40 mois.
+Au fil du temps, la chance d'avoir un EDI augmente progressivement et devient plus prononcée après 30 mois. À 40 mois, environ 73 % des individus ont eu un EDI. Le nombre de personnes à risque Passe de 69 982 au début à 2 272 à 40 mois. En résumé, la chance d'avoir un EDI augmente régulièrement.
+
+## 4- ANALYSE DE LA FONCTION DE SURVIE
+
+```{r}
+# Ajustement du modèle de Kaplan-Meier
+km_fit <- survfit(Surv(duree, EDI) ~ 1, data = base)
+# Résultats du modèle
+summary(km_fit)
+```
+Interpretation:
+Le modèle par approche non parametrique montre une diminution progressive de la fonction de survie avec le temps avant l'obtention d'un EDI. Au début (temps 1), presque tous les individus n'ont pas encore obtenu un EDI (survie de 0.999). À temps 10, 97.8% des individus n'ont pas encore obtenu un EDI, et à temps 30, cette proportion est de 89.2%. La tendance se poursuit, et à temps 40, seulement 33.7% des individus n'ont pas encore obtenu un EDI. Finalement, à temps 44, la survie est de 0.128, indiquant que seulement 12.8% des individus n'ont pas encore obtenu un EDI. Ces résultats montrent que la probabilité de ne pas avoir obtenu un EDI diminue avec le temps, confirmant que de plus en plus d'individus obtiennent un EDI au fil du temps.
+
+a)Ajustement du modèle de Kaplan-Meier par genre
+
+```{r}
+km_fit_sexe <- survfit(Surv(duree, EDI) ~ Q1, data = base)
+
+# Résultats du modèle
+summary(km_fit_sexe)
+
+# Visualisation de la fonction de survie estimée par genre
+ggsurvplot(km_fit_sexe, data = base, xlab = "durée", ylab = "Probabilité de survie",
+           conf.int = TRUE, risk.table = TRUE, pval = TRUE, ggtheme = theme_minimal())
+```
+Interpretation:
+Toute chose égale par ailleure,le modèle de Kaplan-Meier montre que la probabilité de ne pas avoir obtenu un EDI diminue avec le temps pour les deux sexes. Au temps 1, presque tous les individus (hommes et femmes) n'ont pas encore obtenu un CDI. À temps 30, 87.4% des femmes et 90.8% des hommes n'ont pas encore obtenu un EDI. À temps 40, 33.4% des femmes et 34% des hommes n'ont pas encore obtenu un EDI. Finalement, à temps 44, seulement 9.63% des femmes et 13.9% des hommes n'ont pas encore obtenu un EDI, montrant que les femmes obtiennent un CDI légèrement plus rapidement que les hommes.
+
+Les tests de log-rank fournissent une statistique de test et une valeur p pour évaluer si les différences entre les courbes de survie sont statistiquement significatives. Une valeur p inférieure à 0,05 indique généralement que les différences entre les groupes sont significatives.
+```{r}
+# Test de log-rank pour comparer les courbes de survie par genre
+survdiff(Surv(duree, EDI) ~ Q1, data = base)
+```
+Interpretation:
+La statistique du chi-carré obtenue est de 6.5, ce qui mesure la différence globale entre les courbes de survie des deux groupes. La p-value associée est de 0.01, inférieure au seuil conventionnel de 0.05, ce qui indique une différence statistiquement significative. Cette différence suggère que les courbes de survie des hommes et des femmes ne sont pas identiques. En d'autres termes, il existe une différence significative dans la durée avant l'obtention d'un EDI entre les deux genres. Les femmes obtiennent un EDI plus rapidement que les hommes, comme le confirment les différences observées entre les courbes de survie.
+
+b)Ajustement du modèle de Kaplan-Meier par plus haut diplome
+```{r}
+km_fit_haut_diplome <- survfit(Surv(duree, EDI) ~ phdip9, data = base)
+
+# Résultats du modèle
+summary(km_fit_haut_diplome)
+
+# Visualisation de la fonction de survie estimée par niveau de sortie
+ggsurvplot(km_fit_haut_diplome, data = base, xlab = "durée en mois", ylab = "Probabilité de survie",
+           conf.int = TRUE, risk.table = TRUE, pval = TRUE, ggtheme = theme_minimal())
+```
+Interpretation:
+En supposant toute chose égale par ailleure,les courbes de survie montrent que les titulaires de DEA-DESS-Master-M2 ont la meilleure probabilité d'obtenir un EDI rapidement, bien que cette probabilité diminue rapidement avec le temps. Les personnes ayant un BTS-DUT-Santé-social bénéficient d'une probabilité plus stable mais plus faible par rapport au DEA-DESS-Master-M2. Les titulaires de CAP-BEP-MC commencent avec une probabilité élevée, mais celle-ci diminue de manière constante et reste inférieure à celle des diplômés du DEA-DESS-Master-M2. Enfin, ceux avec un Bac font face à une diminution rapide de leur probabilité de survie, indiquant des difficultés accrues pour obtenir un EDI. Ces résultats soulignent l'impact significatif du niveau d'éducation sur l'accès à un EDI.
+
+```{r}
+# Test de log-rank pour comparer les courbes de niveau de sortie
+survdiff(Surv(duree, EDI) ~ phdip9, data = base)
+```
+Interpretation :
+Les résultats montrent des différences significatives entre les courbes de survie des différents niveaux d'éducation en ce qui concerne l'accès à un EDI. En d'autres termes, le temps nécessaire pour obtenir un EDI varie de manière significative selon le niveau d'éducation. Le test de log-rank confirme que ces différences ne sont pas dues au hasard et que des interventions spécifiques pour chaque niveau éducatif pourraient être justifiées pour améliorer l'accès à des emplois permanents (EDI ).
+
+c)Ajustement du modèle de Kaplan-Meier par terminer un contrat d'apprentissage entre 2003 et 2004
+```{r}
+km_fit_AP0 <- survfit(Surv(duree, EDI) ~ AP0, data = base)
+
+# Résultats du modèle
+summary(km_fit_AP0)
+
+# Visualisation de la fonction de survie estimée par terminer un contrat d'apprentissage entre 2003 et 2004
+ggsurvplot(km_fit_AP0, data = base, xlab = "durée", ylab = "Probabilité de survie",
+           conf.int = TRUE, risk.table = TRUE, pval = TRUE, ggtheme = theme_minimal())
+```
+
+Interpretation :
+les résultats du modèle de survie montrent que les individus ayant terminé leur contrat d'apprentissage ont une probabilité de survie beaucoup plus élevée, En supposant toutes les autres facteurs constants ,donc ils gagnent une meilleure chance d'obtenir un EDI, comparativement à ceux dont le contrat est resté inachevé. Pour les contrats terminés, la probabilité de survie reste élevée et décroît rapidement, tandis que pour les contrats non terminés, elle diminue lentement. Cela souligne l'importance de terminer les contrats d'apprentissage pour améliorer les chances d'accès à un emploi stable
+
+```{r}
+# Test de log-rank pour comparer les courbes de terminer un contrat d'apprentissage entre 2003 et 2004
+survdiff(Surv(duree, EDI) ~ AP0, data = base)
+```
+Interpretation:
+Le test de log-rank montre une différence significative entre les courbes de survie des individus ayant terminé leur contrat d'apprentissage et ceux dont le contrat est resté inachevé. Les personnes ayant terminé leur contrat ont une probabilité beaucoup plus élevée d'obtenir un emploi stable comparé à celles qui n'ont pas terminé leur contrat. Les courbes de survie indiquent que les chances d'obtenir un EDI diminuent plus lentement pour ceux ayant complété leur contrat d'apprentissage.
+
+d)Ajustement du modèle de Kaplan-Meier par sorti du superieur
+
+```{r}
+km_fit_super <- survfit(Surv(duree, EDI) ~ SUPER, data = base)
+
+# Résultats du modèle
+summary(km_fit_super)
+
+# Visualisation de la fonction de survie estimée par zone geographique
+ggsurvplot(km_fit_super, data = base, xlab = "durée", ylab = "Probabilité de survie",
+           conf.int = TRUE, risk.table = TRUE, pval = TRUE, ggtheme = theme_minimal())
+```
+Interpretation:
+Les individus ayant atteint un niveau supérieur ont une probabilité plus élevée d'obtenir un EDI par rapport à ceux qui n'ont pas atteint ce niveau toute chose egale par ailleure. Cette probabilité reste supérieure au cours du temps pour ceux ayant atteint un niveau supérieur, tandis que celle des autres diminue plus rapidement. En somme, atteindre un niveau supérieur est un facteur favorable pour obtenir et maintenir un EDI.
+
+```{r}
+# Test de log-rank pour comparer les courbes de sorti de superieur
+survdiff(Surv(duree, EDI) ~ SUPER, data = base)
+```
+Interpretation:
+ Les résultats montrent une différence statistiquement significative entre les deux groupes (Chi-carré = 1305, p < 2e-16). Les individus ayant atteint un niveau supérieur ont, en moyenne, un taux elévé de maintien d'un EDI comparé à ceux qui ne l'ont pas atteint. Cela confirme que l'atteinte d'un niveau supérieur est associée à une probabilité plus élevée de conserver un emploi permanent(EDI).
+ 
+e)Ajustement du modèle de Kaplan-Meier par genre et sorti du superieur.
+```{r}
+km_fit_Q1_SUPER <- survfit(Surv(duree, EDI) ~ Q1+SUPER, data = base)
+
+# Résultats du modèle
+summary(km_fit_Q1_SUPER)
+
+# Visualisation de la fonction de survie estimée par zone geographique
+ggsurvplot(km_fit_Q1_SUPER, data = base, xlab = "durée", ylab = "Probabilité de survie",
+           conf.int = TRUE, risk.table = TRUE, pval = TRUE, ggtheme = theme_minimal())
+```
+Interpretation:
+En suposant tous les autres facteurs constants,les femmes tous comme les hommes ayant atteint le niveau supérieur accedent plus rapidement à un EDI comparativement à ceux ou celles qui n'ont pas atteint le niveau supérieur.Par ailleur les femmes du superieur acceden plus vite que les hommes du superieur.
+
+```{r}
+# Test de log-rank pour comparer les courbes de genre et sorti du superieur
+survdiff(Surv(duree, EDI) ~ Q1+SUPER, data = base)
+```
+Interpretation:
+Les résultats montrent des différences significatives dans la probabilité d'obtenir un EDI en fonction du sexe et du niveau d'éducation avec une p_value p=2e-16 <0.05 . Le sexe et l'obtention d'un niveau d'éducation supérieur ont une forte influence sur la probabilité d'obtenir un EDI, le niveau d'éducation supérieur augmentant généralement cette probabilité. De plus, les femmes et les hommes font face à des probabilités différentes.
+
+
+# 5- REGRESSION DE COX
+
+```{r}
+# Afin d'éviter le problème des valeurs manquantes nous allons definir nos modalités de référence pour chaque variable.
+base$SUPER <- relevel(as.factor(base$SUPER), ref = "Atteint niveau supérieur")
+base$phdip9 <- relevel(as.factor(base$phdip9), ref = "Non diplômé")
+base$AP0 <- relevel(as.factor(base$AP0), ref = "contrat d'apprentissage non terminé")
+base$AP2D <- relevel(as.factor(base$AP2D), ref = "ni travail ni stage")
+base$ep15 <- relevel(as.factor(base$ep15), ref = "Par l'ANPE")
+base$AP18 <- relevel(as.factor(base$AP18), ref = "pas de Contrat d'apprentissage antérieur")
+base$GEO1 <- relevel(as.factor(base$GEO1), ref = "Uniquement dans votre région")
+
+# Ajustement du modèle de Cox
+cox_model <- coxph(Surv(duree, EDI) ~  Q1 + phdip9 + SUPER + AP0 + AP2D + ep15 + AP6 + AP18 + GEO1+ strateg, data = base)
+```
+
+
+```{r}
+# Test de Schoenfeld pour vérifier les risques proportionnels
+cox.zph(cox_model)
+```
+Les variables SUPER, AP2D ep15  montrent des violations des risques proportionnels (p < 0.05). Pour ces variables, il est donc nécessaire d'ajuster le modèle pour tenir compte de cette non-proportionnalité, par exemple en utilisant des modèles de Cox stratifiés ou en ajoutant des termes d'interaction dans le modèle. Dans la suite nous utilisons le modèlede de Cox stratifié.
+
+
+```{r}
+#Modèle de Cox stratifié
+model_cox_strat=coxph(Surv(duree, EDI) ~  Q1  + phdip9 + AP0 + AP18 + GEO1  + SUPER + AP2D + ep15 + strata(Strat) , data = base)
+# Test de Schoenfeld pour vérifier les risques proportionnels
+cox.zph(model_cox_strat)
+```
+Les variables AP2D et ep15  montrent toujours des violations des risques proportionnels (p < 0.05).
+Il faut noter que nous ne pouvons pas utiliser la fonction *step* à cause du traitement des cases vides que nous avions traité au préalable. Nous allons donc enlever les variables qui montrent des violations des risques proportionnels pour espérer avoir un meilleur modèle.
+```{r}
+#Modèle final
+model_cox_final=coxph(Surv(duree, EDI) ~  Q1  + phdip9 + AP0 + AP18 + GEO1  + SUPER + strata(Strat) , data = base)
+
+# Test de Schoenfeld pour vérifier les risques proportionnels
+cox.zph(model_cox_final)
+```
+Les résultats indiquent que pour chaque variable individuelle ainsi que pour le modèle global, il n'y a pas de preuve significative de violation de l'hypothèse des risques proportionnels (p > 0.05 pour toutes les variables).
+```{r}
+# Visualisation des résidus de Schoenfeld
+ggcoxzph(cox.zph(model_cox_final))
+```
+
+
+Le test global de Schoenfeld montre que l'hypothèse de proportionnalité des risques est respectée (p = 0.2976). Les graphiques individuels des résidus de Schoenfeld pour chaque covariable confirment cette hypothèse, les p-values allant de 0 à 0.9983. Les points dans les graphiques sont répartis aléatoirement autour des lignes horizontales, indiquant qu'il n'y a pas de tendance systématique au fil du temps.
+```{r}
+summary(model_cox_final)
+```
+ Les tests globaux du modèle, incluant le test de ratio de vraisemblance, le test de Wald et le test logrank, sont tous hautement significatifs (p < 0.001), confirmant que les variables incluses dans le modèle contribuent de manière significative à l'explication de la survie.
+ 
+  Le modèle de Cox ajusté révèle que plusieurs niveaux d'éducation (phdip9) ont un impact significatif sur l'accès à un EDI. Les niveaux d'éducation Bac, BTS-DUT-Santé-social, CAP-BEP-MC, DEA-DESS-Master-M2, Licence L3 et Maîtrise M1 sont tous associés à une probabilité élévée d'avoir un EDI et des p-valeurs très significatives (p < 0.01), suggérant que des niveaux d'éducation plus élevés augmentent la chance d'avoir un EDI. En revanche, le sexe (Q1), la zone de recherche du travail (GEO1) et le fait de ne pas avoir atteint le niveau supérieur (SUPER) ne montrent pas d'effet significatif sur la survie, leurs p-valeurs étant bien au-dessus du seuil de 0.05. Par ailleurs, la variable AP18 (Contrat d'apprentissage antérieur) est également significative (p = 0.038), indiquant que les personnes ayant eu un contrat d'apprentissage antérieur ont une chance légèrement plus élevée d'avoir un EDI (exp(coef) = 1.25). 

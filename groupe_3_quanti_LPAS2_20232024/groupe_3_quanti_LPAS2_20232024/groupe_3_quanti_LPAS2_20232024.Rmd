@@ -1,0 +1,602 @@
+---
+title: "Modelisation Hedonique"
+author: "NIKIEMA Tayirou, TONGO Lazare et SANKARA Saidou"
+date: "2024-07-24"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+###### Contexte et Justification
+La valeur des terrains à Ouagadougou a considérablement évolué entre 2018 et 2024, en raison de l'urbanisation et des améliorations infrastructurelles. Le modèle hédonique décompose les prix des parcelles selon leurs caractéristiques, aidant ainsi à comprendre l'impact des politiques urbaines sur le marché foncier.
+
+## Étapes préliminaires
+## Assurez-vous que nous avons les packages nécessaires installés/chargés.
+```{r install}
+library(tidyverse) 
+library(glmnet)    
+library(gridExtra) 
+library(tidyr)
+library(lubridate)
+library(dplyr)
+library(questionr)
+library(car)
+library(performance)
+library(lmtest)
+library(caret)
+```
+
+### Load data
+```{r loading}
+setwd("D:/projet_quanti")
+Parcelles <- read_delim("Parcelles.csv", delim = ";", escape_double = FALSE, col_types = cols(Date_vente = col_date(format = "%d/%m/%Y"), Date_fin_contrat = col_date(format = "%d/%m/%Y")), trim_ws = TRUE)
+```
+Les données sont chargées depuis un fichier CSV et contiennent des informations sur 1811 parcelles, telles que la ville, le site, l'usage, la superficie, le coût par mètre carré, le coût total, les taxes, le type d'option de paiement, et diverses attestations et plans établis. Une exploration descriptive des données a sera effectuée pour comprendre la distribution et les relations entre les variables.
+
+### Analyse Desciptive des données
+
+```{r}
+summary(Parcelles)
+```
+
+### Variable Distribution
+
+```{r}
+table(Parcelles$Usage,Parcelles$Site,exclude=NULL)
+table(Parcelles$Site,Parcelles$plan_etablie,exclude=NULL)
+table(year(Parcelles$Date_vente))
+```
+## correlation
+
+```{r}
+cor(Parcelles$Cout_m2,Parcelles$COUT)
+cor(Parcelles$COUT,Parcelles$Superficie)
+cor(Parcelles$COUT,Parcelles$Taxe_Jouissance)
+```
+#Le choix des caractéristiques et l'endogénéité
+
+La littérature sur les prix hédoniques ne définit que peu de règles explicites, impliquant généralement de travailler avec les données disponibles sans chercher à expliquer les prix implicites obtenus. La théorie économique conseille de ne pas inclure de variables d'offre et de demande, car la fonction de prix hédonique représente l'interaction entre vendeurs et acheteurs, sans refléter directement ces variables. Des signes contraires à l'intuition peuvent apparaître en raison des relations complexes entre cette fonction et les courbes d'offre et de demande. Pakes (2003) relie cette fonction aux coûts marginaux des vendeurs, argument renforcé par le fait que l'endogénéité n'est pas un problème en prévision pure. Cependant, des incohérences peuvent résulter d'autres sources, comme l'omission de caractéristiques importantes ou l'utilisation de variables annexes.
+
+#### selection des variables explicatives 
+
+L'analyse descriptive révèle que les variables 'présence ONEA', 'absence ONEA' et 'ville' n'ont qu'une seule modalité, ce qui signifie qu'elles n'influencent pas la variation du prix. De plus, la valeur minimale des coûts des terrains est de 0, ce qui n'est pas logique. Par conséquent, nous écarterons les observations dont le coût du terrain est de 0.La théorie économique stipule que la fonction de prix hédonique ne doit pas inclure des variables qui décrivent directement l'offre et la demande ce qui nous amene à considérer que la date de fin de contrat et le type d'option n'influencent pas le prix de vente du terrain. Nous écarterons donc ces variables de notre modélisation.
+
+
+## Transformation de variables
+
+
+
+```{r}
+hdnc = Parcelles  %>%
+  select(-c(Ville, Type_option, Date_fin_contrat, Presence_ONEA, Presence_SONABEL))%>%
+  filter(COUT >0, Cout_m2 > 0) %>%
+  mutate(years =as.character(year(Date_vente)),
+         lnCOUT = log(COUT)
+)
+```
+
+## Recodage de hdnc$Site en hdnc$Site_rec
+
+```{r}
+hdnc$Site_rec <- hdnc$Site
+hdnc$Site_rec[hdnc$Site == "BASSINKO SITE - BA"] <- "BASSINKO_SITE_BA"
+hdnc$Site_rec[hdnc$Site == "CISSIN 2020 - SITE G"] <- "CISSIN_2020_SITE_G"
+hdnc$Site_rec[hdnc$Site == "OUAGA 2000 - SITE A"] <- "OUAGA_2000_SITE_A"
+hdnc$Site_rec[hdnc$Site == "OUAGA 2000 - SITE AA"] <- "OUAGA_2000_SITE_A"
+hdnc$Site_rec[hdnc$Site == "SECTEUR 16 OUAGA"] <- "SECTEUR_16_OUAGA"
+hdnc$Site_rec[hdnc$Site == "SILMIOUGOU"] <- "SILMIOUGOU"
+```
+
+Examinons la distribution des prix en logarithme et comment ils se rapportent (graphiquement) à certaines caractéristiques des maisons
+
+```{r,echo=FALSE}
+ggplot(data = hdnc) +
+  geom_histogram(mapping = aes(x = lnCOUT))
+```
+
+et comment ils se rapportent (graphiquement) à certaines caractéristiques des parcelles
+```{r,echo=FALSE}
+p1 <- ggplot(data = hdnc) + geom_point(mapping = aes(x = years, y = lnCOUT), alpha = 1)
+p2 <- ggplot(data = hdnc) + geom_point(mapping = aes(x = Cout_m2, y = lnCOUT), alpha = 1)
+p3 <- ggplot(data = hdnc) + geom_point(mapping = aes(x = Superficie, y = lnCOUT), alpha = 1)
+p4 <- ggplot(data = hdnc) + geom_point(mapping = aes(x = Taxe_Jouissance, y = lnCOUT), alpha = 1)
+grid.arrange(p1,p2,p3,p4, nrow=2, ncol=2)
+```
+# Transformer les variables catégorielles en variables de type facteur
+
+```{r}
+hdnc = hdnc %>%
+  mutate(Site_rec = as.factor(Site_rec), Usage= as.factor(Usage), plan_etablie = as.factor(plan_etablie), attestation_etablie = as.factor(attestation_etablie), years = as.factor(years))
+```
+Après le traitement des données, nous allons maintenant commencer l'implémentation de notre modèle hédonique. Cette implémentation débutera par l'ajustement d'un modèle de régression. À cet effet, nous allons essayer plusieurs modèles afin de déterminer celui qui s'adapte le mieux à nos données.
+
+######   Régressions hédoniques
+
+#### Regression par modèle Lineaire multiple
+
+La prémière méthode est le Modèle Log-Linéaire utiliser pour calculer les indices hédoniques consiste à regrouper plusieurs périodes et à estimer un unique modèle hédonique auquel on ajoute des indicatrices temporelles. Lorsque l'ensemble des périodes sont prises en compte, le modèle est Log (Prix) = β·X + δ·D + ε avec X les caractéristiques et D les indicatrices temporelles (avec 2018 comme période de référence).
+Ce modèle est souvent utilisé pour traiter la distribution non normale des prix ce qui est conforme à nos données
+
+# Sélectionner les variables explicatives
+Aprè revision de la litterature, les variables selectionnés sont : Usage, Superficie, Cout_m2, Taxe_Jouissance, attestation_etablie, plan_etablie, years, Site_rec
+En effet se sont les seuls variables que nous avons jugés representatives des caracteristique physiques et des caractéristiques de quartier
+
+NB : il n'y a pas de Caractéristiques environnementalesdans nos données
+
+```{r}
+modlm =lm(lnCOUT~Usage + Superficie + Cout_m2 + Taxe_Jouissance + attestation_etablie + plan_etablie + years + Site_rec , data = hdnc)
+modele_selectionne <- step(modlm, direction = "backward")
+#### selection du meilleur modèle
+summary(modele_selectionne)
+```
+Ainsi donc le meilleur modèle reste le modèle que nous avons adjuster
+
+###### Test d'hypthèses
+### Autocorrelation
+```{r}
+dwtest(modele_selectionne)
+check_autocorrelation(modele_selectionne)
+```
+Le test Durbin-Watson indique que les résidus sont significativement autocorrélés positivement (avec une valeur DW de 1.0357 et une p-value très basse). Cela signifie que les erreurs du modèle ne sont pas indépendantes les unes des autres.
+
+##### Homoscedasticité
+
+```{r}
+bptest(modlm)#Test de Breusch-Pagan
+check_heteroscedasticity(modele_selectionne)
+```
+le test de Breusch-Pagan détecte une hétéroscédasticité des residus cein dique que la variance des erreurs est non constante.
+
+#### Normalité des residus 
+```{r}
+shapiro.test(residuals(modele_selectionne))
+check_normality(modele_selectionne)
+```
+Le test de Shapiro-Wilk révèle que les résidus du modèle ne sont pas normalement distribués.
+
+##### Colinearité
+```{r}
+check_collinearity(modele_selectionne)
+```
+Les variable Superficie, Taxe_Jouissance, et attestation_etablie presente des multicolinéarité faible et modérée  ce qui nous indique une stabilité de ces variable.cependant les autre varibles comme Usage, years et Site_rec on une multicolinéarité éleve ce qui rend les estimation peu fiables.
+
+###### Conclusion sur les hypothèses
+
+Nous constatons que les principaux tests d'hypothèses ne sont pas vérifiés sur le modèle de régression linéaire multiple que nous venons d'ajuster. En conséquence, notre modèle ne s'adapte pas adéquatement à nos données. Pour remédier à ce problème, nous allons utiliser le modèle de régression LASSO, qui nous permettra de pallier ces insuffisances
+
+
+### Régression Lasso
+
+  Nous pouvons utiliser le modèle LASSO (Least Absolute Shrinkage and Selection Operator) pour estimer les prix hédoniques. Le modèle LASSO est une méthode de régularisation qui peut aider à améliorer les prédictions en réduisant le surajustement et en sélectionnant les variables les plus importantes.
+La sélection des variables à inclure ou à exclure du modèle nécessite une analyse approfondie de la théorie économique derrière la demande de parcelles. Cependant, si la question de recherche implique d'avoir un modèle simple, avec la plus petite erreur et une meilleure précision prédictive, nous utilisons la régression Lasso de l'apprentissage automatique pour éviter cette tâche.
+Considérez le Lasso comme une régression OLS qui impose une pénalité (λ) pour la taille des estimations des paramètres. Le paramètre λ est la pénalité de régularisation. Lorsque λ tend vers zéro, nous obtenons les mêmes estimations que dans la régression OLS, et lorsqu'il tend vers l'infini, nous obtenons un modèle avec des estimations nulles.
+  Par défaut, la fonction `glmnet()` effectue une régression Lasso pour une gamme automatiquement sélectionnée de valeurs de λ. Cependant, ici nous avons choisi d'implémenter la fonction sur une grille de valeurs allant de λ = 10^10 à λ = 10^−2, couvrant essentiellement toute la gamme de scénarios, du modèle nul contenant uniquement l'ordonnée à l'origine, à l'ajustement par moindres carrés.
+Ce code nous permet d'utiliser le modèle LASSO pour estimer les prix hédoniques, en prenant en compte la régularisation pour améliorer les prédictions et sélectionner les variables les plus pertinentes.
+
+```{r}
+grid = 10^seq(10, -2, length = 100)
+```
+
+Configurons les données maintenant.
+
+```{r}
+# supprimer la première colonne et ne laisser que les variables indépendantes
+x = model.matrix(lnCOUT~Usage + Superficie + Cout_m2 + Taxe_Jouissance + attestation_etablie + plan_etablie + years + Site_rec, hdnc)[,-1] 
+# ne sélectionner que la variable dépendante
+y = hdnc %>% select(lnCOUT) %>% unlist() %>% as.numeric()
+```
+
+Nous allons maintenant diviser les échantillons en un ensemble d'entraînement et un ensemble de test afin d'estimer l'erreur de test de la régression lasso.
+```{r}
+set.seed(1)
+# nous sélectionnons la moitié des données pour entraîner le modèle et l'autre moitié pour le tester
+train = hdnc %>% sample_frac(0.5)
+test = hdnc %>% setdiff(train)
+# nous définissons maintenant les variables dépendantes et indépendantes
+x_train = model.matrix(lnCOUT~Usage + Superficie + Cout_m2 + Taxe_Jouissance + attestation_etablie + plan_etablie + years + Site_rec, train)[,-1]
+x_test = model.matrix(lnCOUT~Usage + Superficie + Cout_m2 + Taxe_Jouissance + attestation_etablie + plan_etablie + years + Site_rec, test)[,-1]
+y_train = train %>% select(lnCOUT) %>% unlist() %>% as.numeric()
+y_test = test %>% select(lnCOUT) %>% unlist() %>% as.numeric()
+```
+
+Associé à chaque valeur de λ se trouve un vecteur de coefficients de régression ridge, stocké dans une matrice accessible via la fonction coef(). Dans ce cas, il s'agit d'une matrice de 27*100, avec 27 lignes (une pour chaque prédicteur, plus une constante) et 100 colonnes (une pour chaque valeur de λ).
+
+# La fonction glmnet() a un argument alpha qui détermine le type de modèle ajusté. Si alpha = 0, un modèle de régression ridge est ajusté, et si alpha = 1, un modèle lasso est ajusté
+```{r}
+lasso_mod = glmnet(x_train, y_train, alpha = 1, lambda = grid)# Ajuster le modèle lasso sur les données d'entraînement
+dim(coef(lasso_mod))# Dimensions de la matrice des coefficients
+plot(lasso_mod)# Tracer le graphique des coefficients
+```
+On remarque que dans le graphique des coefficients, en fonction du choix du paramètre de régularisation, certains coefficients sont exactement égaux à zéro. Nous effectuons maintenant une validation croisée (test hors échantillon) et calculons l'erreur de test associée :
+
+```{r}
+set.seed(1)
+cv.out = cv.glmnet(x_train, y_train, alpha = 1) # Ajuster le modèle lasso sur les données d'entraînement
+plot(cv.out) # Tracer le graphique de l'erreur quadratique moyenne (MSE) de l'entraînement en fonction de lambda
+bestlam = cv.out$lambda.min # Sélectionner le lambda qui minimise l'erreur quadratique moyenne (MSE) sur les données d'entraînement
+lasso_pred = predict(lasso_mod, s = bestlam, newx = x_test)# Utiliser le meilleur lambda pour prédire les données de test
+mean((lasso_pred - y_test)^2) # Calculate test MSE  # Calculer l'erreur quadratique moyenne (MSE) sur les données de test
+```
+Ceci est considérablement inférieur à la MSE de l'ensemble de test du modèle nul et de la méthode des moindres carrés. De plus, le lasso présente un avantage significatif par rapport aux autres régressions en ce que les estimations des coefficients résultants sont clairsemées. Ici, nous voyons qu'un grand nombre des 27 estimations de coefficients sont exactement égales à zéro :
+```{r}
+# Ajuster le modèle Lasso sur l'ensemble des données
+out = glmnet(x, y, alpha = 1, lambda = grid) # Ajuster le modèle Lasso sur l'ensemble des données
+lasso_coef = predict(out, type = "coefficients", s = bestlam)[1:27,]# Afficher les coefficients en utilisant le lambda choisi par la validation croisée
+lasso_coef
+```
+
+En sélectionnant uniquement les prédicteurs avec des coefficients non nuls, nous voyons que le modèle lasso avec λ choisi par validation croisée ne contient que 18 variables :
+
+```{r}
+table(hdnc$Usage)
+lasso_coef[lasso_coef != 0] # Afficher uniquement les coefficients non nul
+```
+#Interprétation des Estimations du Logarithme du Coût des Parcelles :
+
+Les coefficients de ce modèle fournissent des informations sur l'effet marginal de chaque variable explicative sur le logarithme du coût des parcelles, en tenant compte des autres variables. Les signes et les magnitudes des coefficients permettent de comprendre comment chaque caractéristique affecte la variable dépendante. Par exemple, certains usages, années et sites ont des effets positifs ou négatifs significatifs sur la variable dépendante. En effet tout choses etant egales par ailleurs :
+Voici une version révisée et améliorée du texte concernant l'estimation du logarithme du coût des parcelles par le modèle LASSO :
+
+1. **Parcelles à Usage Commercial à l'Angle :**
+   - Une augmentation d'une unité des parcelles à usage commercial situées à l'angle réduit le logarithme du coût des parcelles de 0,336.
+
+2. **Parcelles à Usage Commercial à l'Angle d'une Route Bitumée :**
+   - Une augmentation d'une unité des parcelles à usage commercial situées à l'angle d'une route bitumée diminue le logarithme du coût des parcelles de 0,449.
+
+3. **Parcelles à Usage Commercial à l'Angle d'une Route à Deux Voies :**
+   - Une augmentation d'une unité des parcelles à usage commercial situées à l'angle d'une route à deux voies augmente le logarithme du coût des parcelles de 0,336.
+
+4. **Parcelles à Usage Commercial Ordinaire à l'Angle :**
+   - Une augmentation d'une unité des parcelles à usage commercial ordinaire situées à l'angle accroît le logarithme du coût des parcelles de 0,135.
+
+5. **Parcelles à Usage Communautaire :**
+   - Une augmentation d'une unité des parcelles à usage communautaire augmente le logarithme du coût des parcelles de 0,143.
+
+6. **Parcelles à Usage d'Habitation :**
+   - Une augmentation d'une unité des parcelles à usage d'habitation diminue le logarithme du coût des parcelles de 0,1508.
+
+7. **Parcelles à Usage d'Habitation à l'Angle :**
+   - Une augmentation d'une unité des parcelles à usage d'habitation situées à l'angle réduit le logarithme du coût des parcelles de 0,1340.
+
+8. **Stations-Service :**
+   - Une augmentation d'une unité du nombre de stations-service augmente le logarithme du coût des parcelles de 0,0262.
+
+9. **Superficie :**
+   - Pour chaque unité supplémentaire de superficie, le logarithme du coût des parcelles augmente de 0,0003802.
+
+10. **Coût par Mètre Carré :**
+    - Pour chaque unité supplémentaire du coût par mètre carré, le logarithme du coût des parcelles augmente de 0,00003612.
+
+11. **Taxe de Jouissance :**
+    - Pour chaque unité supplémentaire de taxe de jouissance, le logarithme du coût des parcelles augmente de 0,00006956.
+
+12. **Attestation Établie :**
+    - Le fait que l'attestation soit établie augmente le logarithme du coût des parcelles de 0,0390.
+
+13. **Plan Établi :**
+    - Le fait que le plan ne soit pas défini n'a pas d'effet direct sur le logarithme du coût des parcelles ; cet effet est pris comme référence.
+
+14. **Années :**
+    - En 2019, le logarithme du coût des parcelles augmente de 0,0177 par rapport à l'année de référence.
+    - En 2020, le logarithme du coût des parcelles diminue de 0,0443 par rapport à l'année de référence.
+    - En 2021, le logarithme du coût des parcelles diminue de 0,1131 par rapport à l'année de référence.
+
+15. **Sites :**
+    - Le site CISSIN en 2020 (SITE_G) réduit le logarithme du coût des parcelles de 1,6673.
+    - Le site OUAGA_2000 (SITE_A) augmente le logarithme du coût des parcelles de 0,1317.
+    - Le secteur 16 de OUAGA réduit le logarithme du coût des parcelles de 0,2229.
+    - Le site SILMIOUGOU n'a pas d'effet direct sur le logarithme du coût des parcelles
+
+# estimateurs sans direct effet direct sur la le logarithme du coût des parcelles
+
+Les années 2022, 2023 et 2024 n'ont pas d'effet direct sur la variable dépendante
+
+les parcelles qui ont un plan_etablie tout comme les parcellles à plan NON DEFINI, les parcelles à Usage COMMERCiale  A L'ANGLE, les parcelles qui ont des attestation non definiment etablie, ont pas d'effets direct sur le le logarithme du coût des parcelles
+
+# Obtenir les coefficients en utilisant le lambda optimal
+```{r}
+best_lasso_coef = predict(out, type = "coefficients", s = bestlam)[,1]
+```
+# Préparer les matrices de caractéristiques pour toutes les années
+```{r}
+x_all = model.matrix(lnCOUT~Usage + Superficie + Cout_m2 + Taxe_Jouissance + attestation_etablie + plan_etablie + years + Site_rec, hdnc)
+```
+# Prédire les valeurs de lnCOUT pour toutes les années
+```{r}
+hdnc$hedonic_lnCOUT = x_all %*% best_lasso_coef
+```
+
+Représentation de courbe du log coût et de la courbe du  log prix hedonique
+
+```{r}
+library(ggplot2)
+hdnc$index <- 1:nrow(hdnc)
+ggplot(hdnc, aes(x = index)) +
+  geom_line(aes(y = lnCOUT, color = "Courbe du log coût")) +
+  geom_line(aes(y = hedonic_lnCOUT, color = "Courbe du log prix hedonique")) +
+  labs(title = "Représentation des courbe",
+       x = "Index",
+       y = "Valeur",
+       color = "Légende") +
+  theme_minimal()
+
+```
+
+
+
+
+
+Les indices élémentaires ou simples
+
+
+
+
+
+
+
+Convertir en coût et Calculer les Indices :
+
+```{r}
+
+hdnc$hedonic_COST = exp(hdnc$hedonic_lnCOUT)
+
+# Calculer le prix moyen, la superfivcie moyenne, pour l'année
+indices = hdnc %>%
+   group_by(years) %>%
+  summarise(COUT_total = mean(lnCOUT), area = mean(Superficie), PrixH = mean(hedonic_COST), )
+
+PrixH_2018 <- indices$PrixH[indices$years == "2018"]
+PrixH_2019 <- indices$PrixH[indices$years == "2019"]
+PrixH_2020 <- indices$PrixH[indices$years == "2020"]
+PrixH_2021 <- indices$PrixH[indices$years == "2021"]
+PrixH_2022 <- indices$PrixH[indices$years == "2022"]
+PrixH_2023 <- indices$PrixH[indices$years == "2023"]
+PrixH_2024 <- indices$PrixH[indices$years == "2024"]
+
+Ih18.19 <- (PrixH_2019 / PrixH_2018) * 100
+Ih18.20 <- (PrixH_2020 / PrixH_2018) * 100
+Ih18.21 <- (PrixH_2021 / PrixH_2018) * 100
+Ih18.22 <- (PrixH_2022 / PrixH_2018) * 100
+Ih18.23 <- (PrixH_2023 / PrixH_2018) * 100
+Ih18.24 <- (PrixH_2024 / PrixH_2018) * 100
+
+# Afficher l'indice de prix hédonique
+
+#L'indice de prix hédonique de 2019 par rapport à 2018 est de
+round(Ih18.19, 2)
+
+#L'indice de prix hédonique de 2020 par rapport à 2018 est de
+round(Ih18.20, 2)
+
+#L'indice de prix hédonique de 2021 par rapport à 2018 est de
+round(Ih18.21, 2)
+
+#L'indice de prix hédonique de 2022 par rapport à 2018 est de
+round(Ih18.22, 2)
+
+#L'indice de prix hédonique de 2023 par rapport à 2018 est de
+round(Ih18.23, 2)
+
+#L'indice de prix hédonique de 2024 par rapport à 2018 est de
+round(Ih18.24, 2)
+
+```
+# Interpretation
+
+Les données révèlent une forte volatilité des prix des parcelles de terrain à Ouagadougou entre 2018 et 2024. En particulier, la hausse spectaculaire des prix en 2019 et surtout en 2021 indique des périodes de forte demande ou des événements spécifiques ayant influencé le marché immobilier. Cette flambée pourrait être attribuée à des facteurs tels qu'une demande accrue, des investissements majeurs ou des changements dans les conditions économiques locales. En revanche, les baisses successives observées en 2023 et 2024 suggèrent un possible retournement du marché, possiblement en réponse à des évolutions économiques, sociales ou politiques défavorables. Ces indices sont cruciaux pour comprendre les dynamiques du marché immobilier et peuvent guider la formulation de politiques urbaines et économiques adaptées aux fluctuations des prix du foncier.
+
+# Taux de croissances
+
+```{r}
+t19 = Ih18.19/100-1
+t20 = Ih18.20/100-1
+t21 = Ih18.21/100-1
+t22 = Ih18.22/100-1
+t23 = Ih18.23/100-1
+t24 = Ih18.24/100-1
+
+#Afficher taux de croissance
+
+#taux de croissance de 2019 par rapport à 2018 est de
+round(t19, 2)
+
+#taux de croissance de 2020 par rapport à 2018 est de
+round(t20, 2)
+
+#taux de croissance de 2021 par rapport à 2018 est de
+round(t21, 2)
+
+#taux de croissance de 2022 par rapport à 2018 est de
+round(t22, 2)
+
+#taux de croissance de 2023 par rapport à 2018 est de
+round(t23, 2)
+
+#taux de croissance de 2024 par rapport à 2018 est de
+round(t24, 2)
+
+
+
+t = c(t19,t20,t21,t22,t23,t24)
+t = as.data.frame(t)
+t$index <- c(2019,2020,2021,2022,2023,2024)
+ggplot(t, aes(x = index)) +
+  geom_line(aes(y = t, color = "Courbe du taux de croissance")) +
+  labs(title = "Représentation de deux courbes",
+       x = "Index",
+       y = "Valeur",
+       color = "Légende") +
+  theme_minimal()
+```
+la superficie moyenne par année
+
+```{r}
+area_2018 <- indices$area[indices$years == "2018"]
+area_2019 <- indices$area[indices$years == "2019"]
+area_2020 <- indices$area[indices$years == "2020"]
+area_2021 <- indices$area[indices$years == "2021"]
+area_2022 <- indices$area[indices$years == "2022"]
+area_2023 <- indices$area[indices$years == "2023"]
+area_2024 <- indices$area[indices$years == "2024"]
+```
+
+#L'indice de Valeur 
+
+```{r}
+v19=(PrixH_2019*area_2019 / (PrixH_2018*area_2018))*100
+v20=(PrixH_2020*area_2020 / (PrixH_2019*area_2019))*100
+v21=(PrixH_2021*area_2021 / (PrixH_2020*area_2020))*100
+v22=(PrixH_2022*area_2022 / (PrixH_2021*area_2021))*100
+v23=(PrixH_2023*area_2023 / (PrixH_2022*area_2022))*100
+v24=(PrixH_2024*area_2024 / (PrixH_2023*area_2023))*100
+v= c(v19, v20, v21, v22, v23, v24)
+
+#Afficher l'indice de Valeur
+
+#L'indice de Valeur de 2019 par rapport à 2018 est de
+round(Ih18.19, 2)
+
+#L'indice de Valeur de 2020 par rapport à 2018 est de
+round(Ih18.20, 2)
+
+#L'indice de Valeur de 2021 par rapport à 2018 est de
+round(Ih18.21, 2)
+
+#L'indice de Valeur de 2022 par rapport à 2018 est de
+round(Ih18.22, 2)
+
+#L'indice de Valeur de 2023 par rapport à 2018 est de
+round(Ih18.23, 2)
+
+#L'indice de Valeur de 2024 par rapport à 2018 est de
+round(Ih18.24, 2)
+```
+
+# Interpretraion
+
+Les indices de valeur révèlent des variations importantes des prix des parcelles de terrain, similaires à celles observées avec les indices hédoniques et de Laspeyres. La forte hausse des prix en 2021 est particulièrement remarquable, suggérant des conditions économiques exceptionnelles ou des changements significatifs dans le marché immobilier. La tendance à la baisse des prix en 2023 et 2024 indique un possible ajustement du marché ou des réponses à des facteurs externes, tels que des changements économiques ou des politiques défavorables. En utilisant les prix de la période de base et les quantités actuelles, les indices de valeur offrent une perspective complémentaire sur les dynamiques du marché immobilier, permettant une analyse plus complète et la formulation de politiques appropriées.
+
+
+#L'indice de Laspeyres
+
+```{r}
+l19=(PrixH_2019*area_2018 / (PrixH_2018*area_2018))*100
+l20=(PrixH_2020*area_2018 / (PrixH_2018*area_2018))*100
+l21=(PrixH_2021*area_2018 / (PrixH_2018*area_2018))*100
+l22=(PrixH_2022*area_2018 / (PrixH_2018*area_2018))*100
+l23=(PrixH_2023*area_2018 / (PrixH_2018*area_2018))*100
+l24=(PrixH_2024*area_2018 / (PrixH_2018*area_2018))*100
+l= c(l19, l20, l21, l22, l23, l24)
+
+# Afficher l'indice de Laspeyres
+
+#L'indice de Laspeyres de 2019 par rapport à 2018 est de
+round(l19, 2)
+
+#L'indice de Laspeyres de 2020 par rapport à 2018 est de
+round(l20, 2)
+
+#L'indice de Laspeyres de 2021 par rapport à 2018 est de
+round(l21, 2)
+
+#L'indice de Laspeyres de 2022 par rapport à 2018 est de
+round(l22, 2)
+
+#L'indice de Laspeyres de 2023 par rapport à 2018 est de
+round(l23, 2)
+
+#L'indice de Laspeyres de 2024 par rapport à 2018 est de
+round(l24, 2)
+```
+#Interpretation
+
+Les indices de Laspeyres révèlent une volatilité des prix similaire à celle observée avec les indices hédoniques, soulignant des fluctuations importantes dans le marché immobilier. La forte augmentation des prix en 2021 est particulièrement marquante, suggérant des conditions économiques exceptionnelles ou des changements significatifs dans le marché. La tendance à la baisse des prix en 2023 et 2024 pourrait indiquer un ajustement du marché ou des réponses à des facteurs externes, tels que des politiques économiques ou des conditions défavorables. Comparés aux indices hédoniques, les indices de Laspeyres offrent une perspective distincte sur les changements de prix en utilisant les quantités de la période de base, fournissant ainsi des informations complémentaires pour comprendre les dynamiques du marché immobilier et orienter les décisions politiques et économiques.
+
+#L'indice de Paasche
+
+```{r}
+p19=(PrixH_2019*area_2019 / (PrixH_2019*area_2018))*100
+p20=(PrixH_2020*area_2020 / (PrixH_2020*area_2018))*100
+p21=(PrixH_2021*area_2021 / (PrixH_2021*area_2018))*100
+p22=(PrixH_2022*area_2022 / (PrixH_2022*area_2018))*100
+p23=(PrixH_2023*area_2023 / (PrixH_2023*area_2018))*100
+p24=(PrixH_2024*area_2024 / (PrixH_2024*area_2018))*100
+p= c(p19, p20, p21, p22, p23, p24)
+
+# Afficher l'indice de Laspeyres
+
+#L'indice de Paasche de 2019 par rapport à 2018 est de
+round(p19, 2)
+
+#L'indice de Paasche de 2020 par rapport à 2018 est de
+round(p20, 2)
+
+#L'indice de Paasche de 2021 par rapport à 2018 est de
+round(p21, 2)
+
+#L'indice de Paasche de 2022 par rapport à 2018 est de
+round(p22, 2)
+
+#L'indice de Paasche de 2023 par rapport à 2018 est de
+round(p23, 2)
+
+#L'indice de Paasche de 2024 par rapport à 2018 est de
+round(p24, 2)
+```
+# Interpretation
+
+Les indices de Paasche révèlent des variations des prix qui intègrent les quantités de chaque année, offrant ainsi une perspective distincte par rapport aux indices de Laspeyres et de valeur. La forte augmentation des prix en 2021 est particulièrement marquante, suggérant des conditions exceptionnelles ou des changements significatifs sur le marché immobilier. La tendance à la baisse des prix en 2023 et 2024 est également notable, indiquant un ajustement du marché ou des réponses à des facteurs externes. En utilisant les quantités de la période en cours, les indices de Paasche enrichissent l'analyse globale des dynamiques des prix et facilitent la formulation de politiques adaptées aux variations du marché immobilier.
+
+#l'indice de Fisher
+
+```{r}
+f19 = sqrt(p19*l19)
+f20 = sqrt(p20*l20)
+f21 = sqrt(p21*l22)
+f22 = sqrt(p22*l22)
+f23 = sqrt(p23*l23)
+f24 = sqrt(p24*l24)
+f = c(f19,f20,f21,f22,f23,f24)
+
+# Afficher l'indice de Fisher
+#L'indice de Fisher de 2019 par rapport à 2018 est de
+round(f19, 2)
+
+#L'indice de Fisher de 2020 par rapport à 2018 est de
+round(f20, 2)
+
+#L'indice de Fisher de 2021 par rapport à 2018 est de
+round(f21, 2)
+
+#L'indice de Fisher de 2022 par rapport à 2018 est de
+round(f22, 2)
+
+#L'indice de Fisher de 2023 par rapport à 2018 est de
+round(f23, 2)
+
+#L'indice de Fisher de 2024 par rapport à 2018 est de 
+round(f24, 2)
+```
+# Interpretation
+
+Les indices de Fisher montrent des variations des prix qui intègrent les perspectives des indices de Laspeyres et de Paasche, offrant ainsi une vue plus équilibrée sur les changements de prix. La forte augmentation des prix en 2021 est particulièrement notable, suggérant des conditions exceptionnelles ou des changements significatifs dans le marché immobilier. La tendance à la baisse des prix en 2023 et 2024 est également marquante, indiquant un ajustement ou une réponse à des facteurs externes. En fournissant une mesure intégrée des variations des prix, les indices de Fisher enrichissent l'analyse globale du marché immobilier et facilitent la formulation de politiques adaptées aux fluctuations du marché.
+
+#representation graphique 
+
+```{r}
+plott= data.frame(l,p,f,v)
+plott$index = c(2019,2020,2021,2022,2023,2024)
+ggplot(plott, aes(x = index)) +
+  geom_line(aes(y = l, color = "Courbe l")) +
+  geom_line(aes(y = p, color = "Courbe p")) +
+  geom_line(aes(y = f, color = "Courbe f")) +
+  geom_line(aes(y = v, color = "Courbe v")) +
+  labs(title = "Représentation de deux courbes",
+       x = "Index",
+       y = "Valeur",
+       color = "Légende") +
+  theme_minimal()
+```
+
+Conclusion
+L'analyse avec le modèle hédonique révèle que la superficie, la localisation, l’usage et l'année de vente sont des facteurs clés influençant les prix des terrains. Cette décomposition fournit des informations essentielles pour orienter les politiques publiques et les investissements urbains futurs.

@@ -1,0 +1,172 @@
+{% extends "salleClasse/base.html" %}
+{% block content %}
+{% comment %}  
+<div class="row">
+    <div class="col-sm-4">
+        <h4 class="text-center alert alert-info">Ajouter une nouvelle salle de classe</h4>
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Enregistrer" class="btn btn-primary">
+            </form>
+    </div>
+    <div class="col-sm-8">
+        <h4 class="text-center alert alert-info"> Liste des salles de classe </h4>
+        {% if classe %}
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Password</th>
+                <th scope="col">Principal</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for cl in classe %}
+              <tr>
+                <th scope="row">{{cl.id}}</th>
+                <td>{{cl.name}}</td>
+                <td>{{cl.date}}</td>
+                <td>{{cl.password}}</td>
+                <td>{{cl.principal}}</td>
+              </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+        <h4 class="text-center alert alert-warning"> Pas de salle de classe </h4>
+
+        {% endif %}
+    </div>
+</div> {% endcomment %}
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Salle de classe</title>
+    <link rel="stylesheet" href="{% static 'salleClasse/css/bootstrap.css' %}">
+    <style>
+        body {
+            background-color: #DAF7A6;
+          }
+      </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light alert alert-primary ">
+        <div class="container-fluid">
+            <!-- Left side: Home, About, Contact -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a style="font-weight: bold;color: black" class="nav-link btn btn-outline-primary" href="http://127.0.0.1:8000/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a style="font-weight: bold;color: black" class="nav-link btn btn-outline-primary" href="{% url 'about' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a style="font-weight: bold;color: black" class="nav-link btn btn-outline-primary" href="{% url 'contact' %}">Contact</a>
+                </li>
+            </ul>
+    
+            <!-- Center: WELCOME -->
+            <div class="navbar-brand mx-auto">
+                <h1 style="font-size: 2em; font-weight: bold;color: green">WELCOME</h1>
+            </div>
+    
+            <!-- Right side: Espace administrateur -->
+            <div class="ml-auto">
+                <h3 style="font-size: 1.5em; font-weight: bold;color: black">
+                <a class="nav-link btn btn-outline-primary" href="http://127.0.0.1:8000/admin">Espace administrateur</a>
+                </h3>
+            </div>
+        </div>
+    </nav>
+            
+    
+    
+    
+
+    <!-- Main Container -->
+    <div class="container mt-5">
+        <h2 class="text-center alert alert-primary font-weight: bold;color: green ">
+            Site de Gestion de Salles de Classe
+        </h2>
+
+       {% comment %}  <!-- Card for Content Block -->
+        <div class="card">
+            <div class="card-body">
+                
+                <!-- Form Example -->
+                <form>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                
+            </div>
+        </div> {% endcomment %}
+
+        <!-- Table Example -->
+        <div class="mt-5">
+            <h3 class="text-center">Liste des Classes</h3>
+            {% if classe %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Code de la classe</th>
+                        <th scope="col">Prof Principal </th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    {% for cl in classe %}
+                  <tr>
+                    <th scope="row">{{cl.id}}</th>
+                    <td>{{cl.name}}</td>
+                    <td>{{cl.date}}</td>
+                    <td>{{cl.password}}</td>
+                    <td>{{cl.principal}}</td>
+                  </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+        <h4 class="text-center alert alert-warning"> Pas de salle de classe </h4>
+
+        {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer  class="bg-light text-center text-lg-start mt-5">
+        <div style="font-weight: bold;color: black" class="text-center p-3">
+            © 2024 Gestion Salle de classe by Groupe 1
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'salleClasse/js/jquery.js' %}"></script>
+    <script src="{% static 'salleClasse/js/bootstrap.js' %}"></script>
+    <script src="{% static 'salleClasse/js/popper.js' %}"></script>
+</body>
+</html>
+
+{% endblock content %}
